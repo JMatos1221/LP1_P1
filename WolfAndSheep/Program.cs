@@ -24,8 +24,10 @@ namespace WolfAndSheep
 
             Console.WriteLine("Welcome to Wolf and Sheep!");
             Console.WriteLine("The rules are very simple.");
-
             print_instructions();
+            Console.WriteLine("You can request this menu during "
+                + "the game by typing 'help'");
+
             print_game(board);
 
             Console.Write(
@@ -39,13 +41,20 @@ namespace WolfAndSheep
                 row -= 49;
                 col -= 65;
 
-                if (row == 0 & (col == 1 || col == 3 ||
-                        col == 5 || col == 7))
+                if (coord == "help")
                 {
-                    break;
-                }
-                Console.Write("Invalid position. Where do you wanna start? "
+                    print_instructions();
+                    print_game(board);
+                    Console.Write("Where do you wanna start? "
                     + "[1B] [1D] [1F] [1H]: ");
+                }
+
+                else if (row == 0 & (col == 1 || col == 3 ||
+                        col == 5 || col == 7)) break;
+
+                else Console.Write("Invalid position. Where do you wanna " +
+                    "start? [1B] [1D] [1F] [1H]: ");
+
             } while (true);
 
             int[] wolfPos = { row, col };
@@ -68,9 +77,9 @@ namespace WolfAndSheep
                     row -= 49;
                     col -= 65;
 
-                    if ((wolfPos[0] + 1 == row || wolfPos[0] - 1 == row) &
-                        (wolfPos[1] + 1 == col || wolfPos[1] - 1 == col) &
-                        board[row, col] != 2)
+                    if (Math.Abs(wolfPos[0] - row) == 1 &
+                        Math.Abs(wolfPos[1] - col) == 1 &
+                        0 <= row & row <= 7 & 0 <= col & col <= 7)
                     {
                         board[wolfPos[0], wolfPos[1]] = 0;
                         wolfPos[0] = row; wolfPos[1] = col;
@@ -79,10 +88,7 @@ namespace WolfAndSheep
                         player = playerName.Sheep;
                     }
 
-                    else
-                    {
-                        Console.Write("Invalid position.\n");
-                    }
+                    else Console.Write("Invalid position.\n");
                 }
 
                 else if ((int)player == 2 & coord.Length == 5)
@@ -97,35 +103,37 @@ namespace WolfAndSheep
                     rowm -= 49;
                     colm -= 65;
 
-                    if (board[row, col] == 2)
+                    if (0 <= row & row <= 7 & 0 <= col & col <= 7 &
+                        0 <= rowm & rowm <= 7 & 0 <= colm & colm <= 7)
                     {
-                        if (row - 1 == rowm & (col - 1 == colm ||
-                            col + 1 == colm) & board[row, col] != 1)
+                        if (board[row, col] == 2)
                         {
-                            board[row, col] = 0;
-                            board[rowm, colm] = 2;
+                            if (row - rowm == 1 & Math.Abs(col - colm) == 1)
+                            {
+                                board[row, col] = 0;
+                                board[rowm, colm] = 2;
 
-                            player = playerName.Wolf;
+                                player = playerName.Wolf;
+                            }
+
+                            else Console.Write("Invalid position.\n");
                         }
 
-                        else
-                        {
-                            Console.Write("Invalid position.\n");
-                        }
+                        else Console.Write("There is no sheep.\n");
                     }
-
-                    else
-                    {
-                        Console.Write("There is no sheep.\n");
-                    }
+                    else Console.Write("Invalid Input.\n");
                 }
                 else Console.Write("Invalid Input.\n");
+
                 gameOver = game_check(board, wolfPos);
+
             } while (!gameOver);
         }
 
-        static void print_game(int[,] table)
+        private static void print_game(int[,] table)
         {
+            Console.WriteLine("\n###############################\n");
+
             Console.WriteLine("\n   A  B  C  D  E  F  G  H");
 
             for (int i = 0; i < 8; i++)
@@ -140,7 +148,7 @@ namespace WolfAndSheep
             }
             Console.WriteLine("");
         }
-        static void print_game(int[,] table, playerName player_name)
+        private static void print_game(int[,] table, playerName player_name)
         {
             Console.WriteLine("\n###############################\n");
 
@@ -161,7 +169,7 @@ namespace WolfAndSheep
             Console.WriteLine("");
         }
 
-        static void print_instructions()
+        private static void print_instructions()
         {
             Console.WriteLine("\nThe Wolf starts by choosing where he is "
                 + "positioned on the board.");
@@ -176,7 +184,7 @@ namespace WolfAndSheep
             Console.WriteLine("Good luck and have fun! :D\n");
         }
 
-        static bool game_check(int[,] table, int[] wolf)
+        private static bool game_check(int[,] table, int[] wolf)
         {
             bool canMove = false;
 
