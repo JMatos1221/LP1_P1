@@ -123,7 +123,8 @@ namespace WolfAndSheep
                     /// <returns>true/false</returns>
                     if (Math.Abs(wolfPos[0] - row) == 1 &
                         Math.Abs(wolfPos[1] - col) == 1 &
-                        0 <= row & row <= 7 & 0 <= col & col <= 7)
+                        0 <= row & row <= 7 & 0 <= col & col <= 7 &
+                        board[row, col] != 2)
                     {
                         //Moves the wolf to the new position and empties the previous one
                         board[wolfPos[0], wolfPos[1]] = 0;
@@ -163,7 +164,8 @@ namespace WolfAndSheep
                         if (board[row, col] == 2)
                         {
                             //Checks if the desired move is a diagonal of the selected Sheep
-                            if (row - rowm == 1 & Math.Abs(col - colm) == 1)
+                            if (row - rowm == 1 & Math.Abs(col - colm) == 1 &
+                                board[rowm, colm] != 1)
                             {
                                 board[row, col] = 0;
                                 board[rowm, colm] = 2;
